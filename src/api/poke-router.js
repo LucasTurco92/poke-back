@@ -1,6 +1,7 @@
 const express = require("express");
 const axios = require('axios');
 const formatPokemonList = require('./utils/pokemonListFormatter');
+const getPokemonEntries = require('./utils/pokemonEntries');
 
 const router = express.Router();
 
@@ -20,13 +21,22 @@ router.get("/", async(req, res, next) => {
 
 router.get("/:id", async(req, res, next) => {
     const  { id }  = req.params || 1;
+
     try {
-        const { data }  = await axios.get(`http://pokeapi.co/api/v2/pokemon/${id}`);
-        const { name,sprites } = data;
+        const [result1, result2] = await Promise.all([
+            await axios.get(`http://pokeapi.co/api/v2/pokemon/${id}`),
+            await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
+          ]);
+
+        const { data:pokeDetail }  = result1;
+        const { data:pokeDescription }  = result2;
+        const { flavor_text_entries } = pokeDescription;
+        const { name,sprites } = pokeDetail;
         
         const pokemon = {
-            name,
-            sprite:sprites.front_default
+            name: name[0].toUpperCase() + name.slice(1),
+            sprite:sprites.front_default,
+            entries:getPokemonEntries(flavor_text_entries)
         };
 
         res.send(pokemon);
