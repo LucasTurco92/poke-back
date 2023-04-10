@@ -1,13 +1,13 @@
 import express from 'express'
-import { requestBuilder } from './utils/requestBuilder.js'
-import { formatPokemonList } from './utils/pokemonListFormatter.js'
-import { getPokemonEntries } from './utils/pokemonEntries.js'
-import { getPokemonTypes } from './utils/getPokemonTypes.js'
-import { cacheHandler } from './utils/cache-handler.js'
+import { requestBuilder } from '../utils/requestBuilder.js'
+import { formatPokemonList } from '../utils/pokemonListFormatter.js'
+import { getPokemonEntries } from '../utils/pokemonEntries.js'
+import { getPokemonTypes } from '../utils/getPokemonTypes.js'
+import { cacheHandler } from '../utils/cache-handler.js'
 const { setValue, getValue } = cacheHandler()
-const router = express.Router()
+const pokeRouter = express.Router()
 
-router.get('/', (req, res, next) => {
+pokeRouter.get('/', (req, res, next) => {
   const getAllPokemons = async () => {
     try {
       const cached = getValue('allPokemons')
@@ -32,7 +32,7 @@ router.get('/', (req, res, next) => {
   getAllPokemons()
 })
 
-router.get('/:id', (req, res, next) => {
+pokeRouter.get('/:id', (req, res, next) => {
   const { id } = req.params || 1
 
   const getOnePokemonById = async () => {
@@ -47,14 +47,14 @@ router.get('/:id', (req, res, next) => {
           await requestBuilder('get', `https://pokeapi.co/api/v2/pokemon-species/${id}`)
         ])
 
-        const { flavorTextEntries } = pokeDescription
+        const { flavor_text_entries } = pokeDescription
         const { name, sprites, types } = pokeDetail
 
         const pokemon = {
           name: name[0].toUpperCase() + name.slice(1),
           sprite: sprites.versions['generation-v']['black-white'].animated.front_default,
           spriteError: sprites.front_default,
-          entries: getPokemonEntries(flavorTextEntries),
+          entries: getPokemonEntries(flavor_text_entries),
           types: getPokemonTypes(types)
         }
         setValue(id, pokemon)
@@ -74,4 +74,4 @@ router.get('/:id', (req, res, next) => {
     })
 })
 
-export { router }
+export { pokeRouter }
