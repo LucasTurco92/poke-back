@@ -1,9 +1,7 @@
-const getPokemontypes = (types) => {
+export const getPokemonTypes = (types) => {
 
     return types.map(data =>{
         const { type } = data;
-        return type.name;
+        return type?.name;
     });
 };
-
-module.exports = getPokemontypes;

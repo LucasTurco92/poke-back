@@ -1,7 +1,7 @@
-var NodeCache = require("node-cache");
+import NodeCache from "node-cache";
 let cache = new NodeCache();
 
-const cacheHandler = () =>{
+export const cacheHandler = () =>{
 
     const setValue = (key,value)=>{
         cache.set(key, value, 60, (err)=> {
@@ -22,5 +22,3 @@ const cacheHandler = () =>{
 
     return {setValue,getValue};
 }
-
-module.exports = cacheHandler;

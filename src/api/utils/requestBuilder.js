@@ -1,6 +1,6 @@
-const axios = require('axios');
+import axios from 'axios';
 
-const requestHandler = async (type, url)=>{
+export const requestBuilder = async (type, url)=>{
     try {
         const { data } = await axios[type](url);
         return data;
@@ -9,8 +9,3 @@ const requestHandler = async (type, url)=>{
         throw err;
       }
 };
-
-
-
-
-module.exports = requestHandler;

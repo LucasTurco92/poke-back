@@ -1,11 +1,12 @@
-const express = require("express");
-const requestHandler = require('./utils/requestBuilder');
-const formatPokemonList = require('./utils/pokemonListFormatter');
-const getPokemonEntries = require('./utils/pokemonEntries');
-const getPokemonTypes = require('./utils/getPokemonTypes');
-const cacheHandler = require('./utils/cache-handler');
+import express  from "express";
+import {requestBuilder} from './utils/requestBuilder.js';
+import {formatPokemonList}  from './utils/pokemonListFormatter.js';
+import {getPokemonEntries}  from './utils/pokemonEntries.js';
+import {getPokemonTypes}  from './utils/getPokemonTypes.js';
+import {cacheHandler}  from './utils/cache-handler.js';
 const { setValue,getValue } = cacheHandler();
 const router = express.Router();
+
 
 router.get("/", (req, res, next) => {
 
@@ -17,7 +18,7 @@ router.get("/", (req, res, next) => {
                 res.send(cached);
     
             }else{
-                const data = await requestHandler('get',`https://pokeapi.co/api/v2/pokemon/?limit=251`);
+                const data = await requestBuilder('get',`https://pokeapi.co/api/v2/pokemon/?limit=251`);
                 const pokemons = formatPokemonList(data);
                
                 setValue('allPokemons',pokemons);
@@ -48,8 +49,8 @@ router.get("/:id", (req, res, next) => {
                 
             }else{
                 const [pokeDetail, pokeDescription] = await Promise.all([
-                    await requestHandler('get',`http://pokeapi.co/api/v2/pokemon/${id}`),
-                    await requestHandler('get',`https://pokeapi.co/api/v2/pokemon-species/${id}`)
+                    await requestBuilder('get',`http://pokeapi.co/api/v2/pokemon/${id}`),
+                    await requestBuilder('get',`https://pokeapi.co/api/v2/pokemon-species/${id}`)
                   ]);
         
                 const { flavor_text_entries } = pokeDescription;
@@ -64,16 +65,19 @@ router.get("/:id", (req, res, next) => {
                 };
                 setValue(id,pokemon);
     
-                res.send(pokemon);
+                return(pokemon);
             }     
         } catch (error) {
-            console.error(error);
-    
-            res.send({});
+            console.log(error)
         }
     }
 
-    getOnePokemonById();
+   getOnePokemonById()
+    .then( pokemon => res.send(pokemon))
+    .catch(error=>{
+        
+        res.send({})
+    })
 });
 
-module.exports = router;
+export  {router};

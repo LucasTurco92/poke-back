@@ -1,8 +1,8 @@
-const express = require('express')
-const router = require('./api/poke-router.js');
-var bodyParser = require('body-parser');
+import express from 'express'
+import {router} from './api/poke-router.js';
+import bodyParser from 'body-parser';
 const app = express();
-var cors = require('cors');
+import cors from 'cors';
 const port = 5000;
 app.use(cors());
 app.options('*', cors());

@@ -1,6 +1,6 @@
 const regex = /\/(\d+)\/$/;
 
-const formatPokemonList = (raw) =>{
+export const formatPokemonList = (raw) =>{
     const { results } = raw;
 
     const a = results.map(pokemon=>{
@@ -14,7 +14,4 @@ const formatPokemonList = (raw) =>{
     return a;
 };
 
-const getNumber = (regex, url)=>{ return url.match(regex)[1]}
-
-
-module.exports = formatPokemonList;
+const getNumber = (regex, url)=> url.match(regex)[1]

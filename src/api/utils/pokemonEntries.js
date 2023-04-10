@@ -1,4 +1,4 @@
-const getPokemonEntries = (raw) => {
+export const getPokemonEntries = (raw) => {
     let uniqueEntries = {};
     const Entries = raw
     .filter(entry => entry.language.name === 'en')
@@ -11,5 +11,3 @@ const getPokemonEntries = (raw) => {
     }, []);
     return Entries;
 };
-
-module.exports = getPokemonEntries;
