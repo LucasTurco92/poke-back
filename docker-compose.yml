@@ -7,9 +7,9 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=lucas
       - MONGO_INITDB_ROOT_PASSWORD=rgdgsdfgdf!!
-    volumes:
-      - mongo-data:/data/db
+#    volumes:
+#      - mongo-data:/data/db
 
 
-volumes:
-  mongo-data:
+#volumes:
+#  mongo-data:
